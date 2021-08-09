@@ -12,6 +12,7 @@ namespace H3_ConsoleBasedBrowser
             string htmlResponse;
 
             Task<string> result = GetWebsite("https://en.wikipedia.org/wiki/Eurasian_otter");
+            //If an exception occured, it will not regex the html tags away
             if (!result.IsFaulted)
             {
                 htmlResponse = Regex.Replace(result.Result, @"<[^>]*>", "");
@@ -24,6 +25,7 @@ namespace H3_ConsoleBasedBrowser
 
         }
 
+        //Returns the html of a website
         static async Task<string> GetWebsite(string url)
         {
             try
@@ -32,8 +34,7 @@ namespace H3_ConsoleBasedBrowser
                 {
                     HttpResponseMessage message = await client.GetAsync(url);
                     message.EnsureSuccessStatusCode();
-                    string response = await message.Content.ReadAsStringAsync();
-                    return response;
+                    return await message.Content.ReadAsStringAsync();
                 }
             }
             catch (Exception e)
